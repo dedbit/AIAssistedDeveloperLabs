@@ -1,5 +1,4 @@
 # Parameters
-cd Lab15
 $basePath = (pwd).path
 $sourcePath = "$basepath\SourceFolder"
 $destinationPath = "$basepath\TargetFolder"
