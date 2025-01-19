@@ -23,10 +23,9 @@ function Sync-Folders {
 
     # Get all files and subdirectories in the source
     $items = Get-ChildItem -Path $Source -Recurse -Force | Where-Object {
-        # Error 1: Exclude logic fails due to incorrect `-match` instead of `-like`
         $match = $false
         foreach ($pattern in $Excludes) {
-            if ($_.Name -match $pattern) {  # This should be `-like` instead of `-match`
+            if ($_.Name -match $pattern) { 
                 $match = $true
                 break
             }
@@ -36,8 +35,7 @@ function Sync-Folders {
 
     # Copy files to destination
     foreach ($item in $items) {
-        # Error 2: Incorrect path replacement logic causes invalid destination paths
-        $targetPath = $item.FullName -replace $Source, $Destination  # Should use [regex]::Escape
+        $targetPath = $item.FullName -replace $Source, $Destination 
 
         if ($item.PSIsContainer) {
             # Create the directory if it doesn't exist
