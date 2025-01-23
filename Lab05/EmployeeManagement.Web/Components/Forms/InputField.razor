@@ -1,0 +1,17 @@
+@using System.Linq.Expressions
+@typeparam TValue
+
+<div class="mb-3">
+    <label for="@Id" class="form-label">@Label</label>
+    <div>
+        @ChildContent
+        <ValidationMessage For="@For" class="text-danger" />
+    </div>
+</div>
+
+@code {
+    [Parameter] public string Id { get; set; } = string.Empty;
+    [Parameter] public string Label { get; set; } = string.Empty;
+    [Parameter] public Expression<Func<TValue>>? For { get; set; }
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+}

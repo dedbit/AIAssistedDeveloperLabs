@@ -1,0 +1,53 @@
+@using EmployeeManagement.Core.Entities
+
+<div class="mb-3">
+    <button class="btn btn-primary" @onclick="OnAddClick">Add Employee</button>
+</div>
+
+@if (Employees == null)
+{
+    <p>Loading...</p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>Email</th>
+                <th>Department</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var employee in Employees)
+            {
+                <tr>
+                    <td>@employee.FirstName</td>
+                    <td>@employee.LastName</td>
+                    <td>@employee.Email</td>
+                    <td>@employee.Department</td>
+                    <td>
+                        <button class="btn btn-primary" @onclick="() => OnEditClick.InvokeAsync(employee)">Edit</button>
+                        <button class="btn btn-danger" @onclick="() => OnDeleteClick.InvokeAsync(employee.Id)">Delete</button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    [Parameter]
+    public List<Employee>? Employees { get; set; }
+
+    [Parameter]
+    public EventCallback OnAddClick { get; set; }
+
+    [Parameter]
+    public EventCallback<Employee> OnEditClick { get; set; }
+
+    [Parameter]
+    public EventCallback<int> OnDeleteClick { get; set; }
+}

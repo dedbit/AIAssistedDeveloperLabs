@@ -1,0 +1,95 @@
+@page "/employees"
+@using EmployeeManagement.Core.Entities
+@using EmployeeManagement.Core.Models
+@inject HttpClient Http
+@inject IJSRuntime JSRuntime
+
+<h3>Employees</h3>
+
+<EmployeeList 
+    Employees="@employees"
+    OnAddClick="@(() => ShowAddEditDialog(null))"
+    OnEditClick="@ShowAddEditDialog"
+    OnDeleteClick="@DeleteEmployee" />
+
+@if (showDialog)
+{
+    <EmployeeForm 
+        Employee="@currentEmployee"
+        OnCancel="@CloseDialog"
+        OnSave="@HandleValidSubmit" />
+}
+
+@code {
+    private List<Employee>? employees;
+    private bool showDialog;
+    private EmployeeDto currentEmployee = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadEmployees();
+    }
+
+    private async Task LoadEmployees()
+    {
+        employees = await Http.GetFromJsonAsync<List<Employee>>("api/employees");
+    }
+
+    private void ShowAddEditDialog(Employee? employee)
+    {
+        currentEmployee = employee == null ? new EmployeeDto() : MapToDto(employee);
+        showDialog = true;
+    }
+
+    private void CloseDialog()
+    {
+        showDialog = false;
+        currentEmployee = new EmployeeDto();
+    }
+
+    private async Task HandleValidSubmit(EmployeeDto employeeDto)
+    {
+        var employee = MapToEntity(employeeDto);
+        
+        if (employee.Id == 0)
+        {
+            await Http.PostAsJsonAsync("api/employees", employee);
+        }
+        else
+        {
+            await Http.PutAsJsonAsync($"api/employees/{employee.Id}", employee);
+        }
+
+        await LoadEmployees();
+        CloseDialog();
+    }
+
+    private async Task DeleteEmployee(int id)
+    {
+        if (await JSRuntime.InvokeAsync<bool>("confirm", "Are you sure you want to delete this employee?"))
+        {
+            await Http.DeleteAsync($"api/employees/{id}");
+            await LoadEmployees();
+        }
+    }
+
+    private static EmployeeDto MapToDto(Employee employee) => new()
+    {
+        Id = employee.Id,
+        FirstName = employee.FirstName,
+        LastName = employee.LastName,
+        Email = employee.Email,
+        Department = employee.Department,
+        Salary = employee.Salary
+    };
+
+    private static Employee MapToEntity(EmployeeDto dto) => new()
+    {
+        Id = dto.Id,
+        FirstName = dto.FirstName,
+        LastName = dto.LastName,
+        Email = dto.Email,
+        Department = dto.Department,
+        Salary = dto.Salary
+    };
+}
