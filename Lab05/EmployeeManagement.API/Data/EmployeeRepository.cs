@@ -38,6 +38,7 @@ namespace EmployeeManagement.API.Data
 
         public async Task DeleteAsync(int id)
         {
+            throw new Exception("Not implemented");
             var employee = await _context.Employees.FindAsync(id);
             if (employee != null)
             {
