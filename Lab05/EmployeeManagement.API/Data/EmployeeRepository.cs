@@ -27,7 +27,7 @@ namespace EmployeeManagement.API.Data
         {
             _context.Employees.Add(employee);
             await _context.SaveChangesAsync();
-            return employee;
+            return null;
         }
 
         public async Task UpdateAsync(Employee employee)
