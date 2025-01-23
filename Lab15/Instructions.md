@@ -25,7 +25,7 @@ Follow the steps outlined below to complete the lab.
 - Observe that GitHub copilot explains the errors in the output.
 - Select specific error output in the terminal
 - Enter the following prompt: "/fix #terminalSelection"
-- Focus on one of the suggested changes, click the Ellipsis (...) and select "Apply In editor"
+- Focus on suggested change, click the Ellipsis (...) and select "Apply In editor"
 - Observe the change(s) in editor and select 'Accept changes' for each
 - Run the script again and observe that errors are fixed, or reiterate.
 
