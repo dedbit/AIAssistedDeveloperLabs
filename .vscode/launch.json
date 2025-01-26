@@ -1,0 +1,10 @@
+{
+  "configurations": [
+    {
+      "type": "PowerShell",
+      "request": "launch",
+      "name": "Launch DemoScript",
+      "script": "${workspaceFolder}/Lab15/DemoScript.ps1"
+    }
+  ]
+}

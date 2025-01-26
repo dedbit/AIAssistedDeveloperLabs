@@ -1,0 +1,2 @@
+Use var whenever possible
+
