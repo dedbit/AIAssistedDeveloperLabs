@@ -10,6 +10,9 @@ public class Example
         if (value > 0)
             names = new List<String>();
 
-        names.Add("Major Major Major");
+        foreach (var item in args)
+        {
+            names.Add("Name: " + item);
+        }
     }
 }
