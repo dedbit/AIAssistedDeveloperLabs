@@ -1,0 +1,57 @@
+<mxfile host="65bd71144e">
+    <diagram name="Diagram" id="0">
+        <mxGraphModel dx="1518" dy="621" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+            <root>
+                <mxCell id="0"/>
+                <mxCell id="1" parent="0"/>
+                <mxCell id="6pCkve7ueZ6-HJeiDQGM-10" value="ACOP-Dev-FA&#10;&#10;Function App&#10;Executes serverless functions" style="rounded=1;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="160" y="270" width="160" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="6pCkve7ueZ6-HJeiDQGM-11" value="ACOP-Dev-AI&#10;&#10;Application Insights&#10;Provides monitoring and diagnostics" style="rounded=1;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="480" y="60" width="160" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="6pCkve7ueZ6-HJeiDQGM-12" value="ACOP-Dev-ASP&#10;&#10;App Service Plan&#10;Hosts web applications" style="rounded=1;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="480" y="180" width="160" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="6pCkve7ueZ6-HJeiDQGM-13" value="ACOP-Dev-KV&#10;&#10;Key Vault&#10;Manages secrets and keys" style="rounded=1;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="480" y="300" width="160" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="6pCkve7ueZ6-HJeiDQGM-14" value="acopsa&#10;&#10;Storage Account&#10;Stores unstructured data" style="rounded=1;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="480" y="420" width="160" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="6pCkve7ueZ6-HJeiDQGM-15" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" source="6pCkve7ueZ6-HJeiDQGM-10" target="6pCkve7ueZ6-HJeiDQGM-11" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="400" y="310"/>
+                            <mxPoint x="400" y="100"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="6pCkve7ueZ6-HJeiDQGM-16" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" source="6pCkve7ueZ6-HJeiDQGM-10" target="6pCkve7ueZ6-HJeiDQGM-12" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="400" y="310"/>
+                            <mxPoint x="400" y="220"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="6pCkve7ueZ6-HJeiDQGM-17" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" source="6pCkve7ueZ6-HJeiDQGM-10" target="6pCkve7ueZ6-HJeiDQGM-13" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="400" y="310"/>
+                            <mxPoint x="400" y="340"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="6pCkve7ueZ6-HJeiDQGM-18" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" source="6pCkve7ueZ6-HJeiDQGM-10" target="6pCkve7ueZ6-HJeiDQGM-14" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="400" y="310"/>
+                            <mxPoint x="400" y="460"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
+</mxfile>

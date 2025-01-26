@@ -1,0 +1,21 @@
+﻿{
+      "SubscriptionName": "Filip MSDN",
+      "SubscriptionId": "d3e92861-7740-4f9f-8cd2-bdfe8dd4bde3",
+      "TenantId":"6df08080-a31a-4efa-8c05-2373fc4515fc",
+      "Location": "West Europe",
+      "ResourceGroupName": "AdformCopilot",
+
+      "EnvironmentName":"Dev",
+      "ServiceConnectionObjectId":"7de566bc-13a0-4cf4-8ac8-202e832fe82c",
+      "Resource":
+      {
+        
+        "StorageAccountName": "acopsa",
+        "KeyVaultName":"ACOP-Dev-KV",
+        "KeyVaultSecretNames":["ServiceUsername","ServicePassword"],
+        "FunctionAppName":"ACOP-Dev-FA",
+        "HostingPlanName":"ACOP-Dev-SP",
+        "AppServicePlanName":"ACOP-Dev-ASP",
+        "applicationInsightsName":"ACOP-Dev-AI"
+      }
+  }
