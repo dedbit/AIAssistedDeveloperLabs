@@ -10,9 +10,15 @@ public class Example
         if (value > 0)
             names = new List<String>();
 
+        var namesEnumerable = new List<string>();
+
         foreach (var item in args)
         {
             names.Add("Name: " + item);
+
+            namesEnumerable.Add("Name: " + item);
         }
+        
     }
+
 }
