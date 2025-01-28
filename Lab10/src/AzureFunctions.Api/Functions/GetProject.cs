@@ -27,13 +27,22 @@ namespace AzureFunctions.Api.Functions
             [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = null)] HttpRequest req,
             ILogger log)
         {
-            log.LogInformation("GetProject called");
+            try
+            {
+                log.LogInformation("GetProject called");
 
-            ProjectGetRequest getRequest = await _functionHelper.DeserializeBody<ProjectGetRequest>("GetProject", req);
+                ProjectGetRequest getRequest = await _functionHelper.DeserializeBody<ProjectGetRequest>("GetProject", req);
 
-            Project proj1 = await _projectRepository.GetProject(getRequest.ProjectId);
+                Project proj1 = await _projectRepository.GetProject(getRequest.ProjectId);
             
-            return _functionHelper.GetOkObjectResponse(GetType().Name, proj1);
+                return _functionHelper.GetOkObjectResponse(GetType().Name, proj1);
+
+            }
+            catch (System.Exception ex)
+            {
+                log.LogError(ex, "GetProject failed");
+                throw;
+            }
 
         }
     }

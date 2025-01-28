@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using AzureFunctions.Api.Clients;
 using AzureFunctions.Api.Managers;
 using AzureFunctions.Api.Model;
@@ -21,7 +22,7 @@ namespace AzureFunctions.Api.Repositories
         {
             _configManager = configManager;
             string storageConnectionString = _configManager.GetConfigValue("AzureWebJobsStorage");
-            _projectTableClient = new TableStorageClient(storageConnectionString, "projects");
+            _projectTableClient = new TableStorageClient(storageConnectionString, "Projects");
 
             SeedData().Wait();
         }
@@ -29,8 +30,7 @@ namespace AzureFunctions.Api.Repositories
         public ProjectRepository(ConfigManager configManager, TableStorageClient tableStorageClient)
         {
             _configManager = configManager;
-            //string storageConnectionString = _configManager.GetConfigValue("AzureWebJobsStorage");
-            _projectTableClient = tableStorageClient;
+            _projectTableClient = tableStorageClient ?? throw new ArgumentNullException(nameof(tableStorageClient));
 
             SeedData().Wait();
         }

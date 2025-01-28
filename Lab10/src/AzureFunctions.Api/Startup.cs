@@ -1,5 +1,6 @@
 ﻿using AzureFunctions.Api;
 using AzureFunctions.Api.BookModel;
+using AzureFunctions.Api.Clients;
 using AzureFunctions.Api.Helpers;
 using AzureFunctions.Api.Managers;
 using AzureFunctions.Api.Repositories;
@@ -19,10 +20,17 @@ namespace AzureFunctions.Api
             ConfigManager _configManager = new ConfigManager();
 
             var services = builder.Services;
-            
+
             services.AddSingleton(_configManager);
             services.AddSingleton<FunctionHelper>();
-            services.AddSingleton<ProjectRepository>();
+
+            // Register ProjectRepository with both dependencies
+            services.AddSingleton<ProjectRepository>(provider =>
+            {
+                var configManager = provider.GetRequiredService<ConfigManager>();
+                return new ProjectRepository(configManager);
+            });
+
             services.BuildServiceProvider();
 
             string connectionString = _configManager.GetConfigValue("ConnectionString");
