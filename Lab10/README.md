@@ -1,6 +1,6 @@
 # Introduction 
 
-This is an Azure function project with deployment, Azure DevOps pipeline (YML), environment management and much more - ready to get started in 10 minutes. (Well, maybe not the first time you try ;-), but it really is a quick start.)
+This is an Azure function project with deployment, Azure DevOps pipeline (YML), environment management and much more - ready to get started.
 
 This project deploys resources as outlined in the following overview drawing.
 
