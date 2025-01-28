@@ -10,6 +10,7 @@ using Microsoft.Extensions.Logging;
 using Moq;
 using Xunit;
 using Xunit.Abstractions;
+using Moq.EntityFrameworkCore;
 
 namespace AzureFunctions.Api.Tests
 {
@@ -130,5 +131,55 @@ namespace AzureFunctions.Api.Tests
             Assert.Equal("Unexpected error", objectResult.Value);
         }
 
+
+        [Fact]
+        public void ComplexQuery2_ReturnsExpectedResult()
+        {
+            // Arrange
+            List<Book> books = new List<Book>
+            {
+                new Book { BookId = 1, Title = "Book1", PublisherId = 1, LanguageId = 1 },
+                new Book { BookId = 2, Title = "Book2", PublisherId = 2, LanguageId = 2 }
+            };
+
+            List<BookAuthor> bookAuthors = new List<BookAuthor>
+            {
+                new BookAuthor { BookId = 1, AuthorId = 1 },
+                new BookAuthor { BookId = 2, AuthorId = 2 }
+            };
+
+            List<Author> authors = new List<Author>
+            {
+                new Author { AuthorId = 1, AuthorName = "Author1" },
+                new Author { AuthorId = 2, AuthorName = "Author2" }
+            };
+
+            List<Publisher> publishers = new List<Publisher>
+            {
+                new Publisher { PublisherId = 1, PublisherName = "Specific Publisher" },
+                new Publisher { PublisherId = 2, PublisherName = "Other Publisher" }
+            };
+
+            List<BookLanguage> languages = new List<BookLanguage>
+            {
+                new BookLanguage { LanguageId = 1, LanguageName = "English" },
+                new BookLanguage { LanguageId = 2, LanguageName = "French" }
+            };
+
+            Mock<gravity_booksContext> contextMock = new Mock<gravity_booksContext>();
+            contextMock.Setup(c => c.Books).ReturnsDbSet(books);
+            contextMock.Setup(c => c.BookAuthors).ReturnsDbSet(bookAuthors);
+            contextMock.Setup(c => c.Authors).ReturnsDbSet(authors);
+            contextMock.Setup(c => c.Publishers).ReturnsDbSet(publishers);
+            contextMock.Setup(c => c.BookLanguages).ReturnsDbSet(languages);
+
+            BooksRepository repository = new BooksRepository(contextMock.Object);
+
+            // Act
+            repository.ComplexQuery();
+
+            // Assert
+            // Add assertions to verify the expected result
+        }
     }
 }

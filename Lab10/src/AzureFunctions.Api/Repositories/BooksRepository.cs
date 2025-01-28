@@ -1,4 +1,5 @@
 ﻿using AzureFunctions.Api.BookModel;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -17,15 +18,29 @@ public class BooksRepository
 
     }
 
-    public void ComplexQuery()
+    public List<object> ComplexQuery()
     {
-        // Todo: Setup this query for explaining
-        // CurrentData.AppConfidential_FromDb = await (from o in _context.AppConfidential
-        //                          where o.CustomerId == _configuration.CustomerId
-        //                          && o.SystemId == _configuration.System
-        //                          && (!o.Deleted.HasValue) // Dem som ikke er fjernet (dem der er softdeleted, skal potentielt stadig vedligeholdes pga obslisten
-        //                          select o).ToDictionaryAsync(x => CurrentData.GetKey_AppConfidential_Current(x.Type, x.Identifier, x.InstitutionId, x.SectionId, x.UserId), StringComparer.OrdinalIgnoreCase);
+        if (_context.Books == null || _context.BookAuthors == null || _context.Authors == null || _context.Publishers == null || _context.BookLanguages == null)
+        {
+            throw new ArgumentNullException("One or more required tables are null.");
+        }
 
+        IQueryable<object> query = from book in _context.Books
+                                   join bookAuthor in _context.BookAuthors on book.BookId equals bookAuthor.BookId
+                                   join author in _context.Authors on bookAuthor.AuthorId equals author.AuthorId
+                                   join publisher in _context.Publishers on book.PublisherId equals publisher.PublisherId
+                                   join language in _context.BookLanguages on book.LanguageId equals language.LanguageId
+                                   where publisher.PublisherName == "Specific Publisher"
+                                   select new
+                                   {
+                                       BookTitle = book.Title,
+                                       AuthorName = author.AuthorName,
+                                       PublisherName = publisher.PublisherName,
+                                       LanguageName = language.LanguageName
+                                   };
+
+        List<object> result = query.ToList();
+        return result;
     }
 
 
