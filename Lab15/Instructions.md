@@ -30,8 +30,4 @@ Follow the steps outlined below to complete the lab.
 - Run the script again and observe that errors are fixed, or reiterate.
 
 
-### gh copilot
-
-
-### Powertoys paste
 
