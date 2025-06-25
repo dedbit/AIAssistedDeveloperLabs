@@ -5,8 +5,8 @@ GET http://localhost:7071/api/HttpTrigger
 
 ### GetProject
 GET http://localhost:7071/api/GetProject
-
 content-type: application/json
+
 {   
     "ProjectId": "A01"
 }

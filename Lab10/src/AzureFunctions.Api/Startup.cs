@@ -4,11 +4,10 @@ using AzureFunctions.Api.Clients;
 using AzureFunctions.Api.Helpers;
 using AzureFunctions.Api.Managers;
 using AzureFunctions.Api.Repositories;
-//using Microsoft.Azure.Functions.Extensions;
 using Microsoft.Azure.Functions.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.InMemory; // Add this using directive
 using Microsoft.Extensions.DependencyInjection;
-
 
 [assembly: FunctionsStartup(typeof(Startup))]
 namespace AzureFunctions.Api
@@ -17,14 +16,13 @@ namespace AzureFunctions.Api
     {
         public override void Configure(IFunctionsHostBuilder builder)
         {
-            ConfigManager _configManager = new ConfigManager();
-
+            var _configManager = new ConfigManager();
             var services = builder.Services;
 
             services.AddSingleton(_configManager);
             services.AddSingleton<FunctionHelper>();
 
-            // Register ProjectRepository with both dependencies
+            // Register ProjectRepository
             services.AddSingleton<ProjectRepository>(provider =>
             {
                 var configManager = provider.GetRequiredService<ConfigManager>();
@@ -33,14 +31,12 @@ namespace AzureFunctions.Api
 
             services.BuildServiceProvider();
 
-            string connectionString = _configManager.GetConfigValue("ConnectionString");
-
+            // Use an in-memory database instead of SQL
             services.AddDbContext<gravity_booksContext>(options =>
-                options.UseSqlServer(connectionString));
+                options.UseInMemoryDatabase("InMemoryDb"));
+
+
             services.AddScoped<BooksRepository>();
-
-
         }
     }
-
 }
