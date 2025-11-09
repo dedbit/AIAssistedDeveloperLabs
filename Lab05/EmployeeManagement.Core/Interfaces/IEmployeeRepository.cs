@@ -1,4 +1,5 @@
 using EmployeeManagement.Core.Entities;
+using EmployeeManagement.Core.Models;
 
 namespace EmployeeManagement.Core.Interfaces
 {
@@ -9,5 +10,6 @@ namespace EmployeeManagement.Core.Interfaces
         Task<Employee> AddAsync(Employee employee);
         Task UpdateAsync(Employee employee);
         Task DeleteAsync(int id);
+        Task<IEnumerable<DepartmentEmployeeStatsDto>> GetDepartmentStatsAsync(decimal? minSalary = null, string? search = null);
     }
 }

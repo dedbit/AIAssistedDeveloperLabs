@@ -1,5 +1,6 @@
 using EmployeeManagement.Core.Entities;
 using EmployeeManagement.Core.Interfaces;
+using EmployeeManagement.Core.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EmployeeManagement.API.Controllers
@@ -70,6 +71,19 @@ namespace EmployeeManagement.API.Controllers
 
             await _repository.DeleteAsync(id);
             return NoContent();
+        }
+
+        /// <summary>
+        /// Returns aggregated statistics about employees per department. Demonstrates grouping, filtering, and joining.
+        /// </summary>
+        /// <param name="minSalary">Optional minimum salary filter.</param>
+        /// <param name="search">Optional term to search across name, email, and department.</param>
+        [HttpGet("stats")]
+        [ProducesResponseType(typeof(IEnumerable<DepartmentEmployeeStatsDto>), StatusCodes.Status200OK)]
+        public async Task<ActionResult<IEnumerable<DepartmentEmployeeStatsDto>>> GetDepartmentStats([FromQuery] decimal? minSalary = null, [FromQuery] string? search = null)
+        {
+            var stats = await _repository.GetDepartmentStatsAsync(minSalary, search);
+            return Ok(stats);
         }
     }
 }

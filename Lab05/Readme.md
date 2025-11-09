@@ -67,3 +67,42 @@ dotnet ef migrations add InitialCreate
    
 dotnet ef database update
    
+## API Endpoints
+
+- GET /api/employees
+- GET /api/employees/{id}
+- POST /api/employees
+- PUT /api/employees/{id}
+- DELETE /api/employees/{id}
+
+### New: Department statistics with grouping, filtering, and joining
+
+GET /api/employees/stats
+
+Query parameters:
+
+- minSalary (decimal, optional): only include employees with Salary >= minSalary
+- search (string, optional): case-insensitive term matched against first/last name, email, or department
+
+Example requests:
+
+- /api/employees/stats
+- /api/employees/stats?minSalary=50000
+- /api/employees/stats?search=it
+- /api/employees/stats?minSalary=60000&search=sales
+
+Response shape:
+
+[
+	{
+		"department": "IT",
+		"employeeCount": 3,
+		"averageSalary": 73333.33,
+		"totalSalary": 220000.00,
+		"maxSalary": 90000.00,
+		"topEarnerFirstName": "Alice",
+		"topEarnerLastName": "Anderson",
+		"topEarnerEmail": "alice@example.com"
+	}
+]
+
