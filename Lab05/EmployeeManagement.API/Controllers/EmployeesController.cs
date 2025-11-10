@@ -1,5 +1,6 @@
 using EmployeeManagement.Core.Entities;
 using EmployeeManagement.Core.Interfaces;
+using EmployeeManagement.Core.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EmployeeManagement.API.Controllers
@@ -70,6 +71,25 @@ namespace EmployeeManagement.API.Controllers
 
             await _repository.DeleteAsync(id);
             return NoContent();
+        }
+
+        /// <summary>
+        /// Gets compensation analysis showing employee distribution across salary ranges by department.
+        /// This endpoint demonstrates a complex EF Core query with grouping, filtering, and aggregations.
+        /// Example: GET /api/employees/compensation-analysis?bucketSize=25000&minEmployeeCount=2
+        /// - sundhed.dk
+        /// </summary>
+        /// <param name="bucketSize">The salary range bucket size in dollars, e.g., 25000 for $25K buckets</param>
+        /// <param name="minEmployeeCount">Minimum employees required to include a result, e.g., 1, 2, 5</param>
+        /// <returns>List of compensation analysis grouped by salary range and department</returns>
+        [HttpGet("compensation-analysis")]
+        [ProducesResponseType(typeof(IEnumerable<CompensationAnalysisDto>), StatusCodes.Status200OK)]
+        public async Task<ActionResult<IEnumerable<CompensationAnalysisDto>>> GetCompensationAnalysis(
+            [FromQuery] decimal bucketSize = 25000m,
+            [FromQuery] int minEmployeeCount = 1)
+        {
+            IEnumerable<CompensationAnalysisDto> analysis = await _repository.GetCompensationAnalysisAsync(bucketSize, minEmployeeCount);
+            return Ok(analysis);
         }
     }
 }
