@@ -59,41 +59,29 @@ namespace EmployeeManagement.API.Data
         /// <returns>List of compensation analysis grouped by salary range and department</returns>
         public async Task<IEnumerable<CompensationAnalysisDto>> GetCompensationAnalysisAsync(decimal bucketSize = 25000m, int minEmployeeCount = 1)
         {
-            // First, get all employees with their salary bucket calculated
-            List<Employee> allEmployees = await _context.Employees.ToListAsync();
+            // Single LINQ query: group, bucket, aggregate, and calculate percentage in one step
+            var query = from e in _context.Employees
+                        let bucketMin = Math.Floor(e.Salary / bucketSize) * bucketSize
+                        let bucketMax = (Math.Floor(e.Salary / bucketSize) + 1) * bucketSize
+                        group e by new { bucketMin, bucketMax, e.Department } into g
+                        let departmentTotal = _context.Employees.Count(emp => emp.Department == g.Key.Department)
+                        let employeeCount = g.Count()
+                        where employeeCount >= minEmployeeCount
+                        orderby g.Key.Department, g.Key.bucketMin
+                        select new CompensationAnalysisDto
+                        {
+                            SalaryRangeMin = g.Key.bucketMin,
+                            SalaryRangeMax = g.Key.bucketMax,
+                            SalaryRangeLabel = $"${g.Key.bucketMin / 1000}K-${g.Key.bucketMax / 1000}K",
+                            Department = g.Key.Department,
+                            EmployeeCount = employeeCount,
+                            AverageSalary = g.Average(x => x.Salary),
+                            PercentageOfDepartment = departmentTotal > 0
+                                ? Math.Round((decimal)employeeCount / departmentTotal * 100, 2)
+                                : 0
+                        };
 
-            // Calculate department totals for percentage calculations
-            Dictionary<string, int> departmentTotals = allEmployees
-                .GroupBy(e => e.Department)
-                .ToDictionary(g => g.Key, g => g.Count());
-
-            // Group employees by salary range bucket and department
-            List<CompensationAnalysisDto> results = allEmployees
-                .Select(e => new
-                {
-                    Employee = e,
-                    BucketMin = Math.Floor(e.Salary / bucketSize) * bucketSize,
-                    BucketMax = (Math.Floor(e.Salary / bucketSize) + 1) * bucketSize
-                })
-                .GroupBy(x => new { x.BucketMin, x.BucketMax, x.Employee.Department })
-                .Select(g => new CompensationAnalysisDto
-                {
-                    SalaryRangeMin = g.Key.BucketMin,
-                    SalaryRangeMax = g.Key.BucketMax,
-                    SalaryRangeLabel = $"${g.Key.BucketMin / 1000}K-${g.Key.BucketMax / 1000}K",
-                    Department = g.Key.Department,
-                    EmployeeCount = g.Count(),
-                    AverageSalary = g.Average(x => x.Employee.Salary),
-                    PercentageOfDepartment = departmentTotals.ContainsKey(g.Key.Department)
-                        ? Math.Round((decimal)g.Count() / departmentTotals[g.Key.Department] * 100, 2)
-                        : 0
-                })
-                .Where(r => r.EmployeeCount >= minEmployeeCount)
-                .OrderBy(r => r.Department)
-                .ThenBy(r => r.SalaryRangeMin)
-                .ToList();
-
-            return results;
+            return await query.ToListAsync();
         }
     }
 }
