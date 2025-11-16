@@ -62,11 +62,10 @@ namespace AzureFunctions.Api.Functions
             catch (Exception ex)
             {
                 log.LogError(ex, "Unexpected error in GetCustomer");
-                //throw;
                 return new ObjectResult("Unexpected error");
-
             }
-
         }
+
+        
     }
 }

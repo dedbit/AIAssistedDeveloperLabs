@@ -48,6 +48,7 @@ namespace AzureFunctions.Api.Tests
         public async Task Run_CallsGetTopBooks()
         {
             // Arrange
+            
             var httpRequestMock = new Mock<HttpRequest>();
             var logMock = _loggerMock.Object;
             var getCustomerFunction = new GetCustomers(_booksRepositoryMock.Object);
@@ -57,7 +58,6 @@ namespace AzureFunctions.Api.Tests
 
             // Assert
             _booksRepositoryMock.Verify(repo => repo.GetTopCustomers(20), Times.Once);
-
         }
 
         [Fact]
@@ -84,9 +84,11 @@ namespace AzureFunctions.Api.Tests
             Assert.IsType<OkObjectResult>(result);
 
             var okResult = (OkObjectResult)result;
-            var customerOutput = (string[])okResult.Value;
+            var customerOutput = (BookModel.Customer[])okResult.Value;
 
-            Assert.Equal(customers.Select(c => c.FirstName).ToArray(), customerOutput);
+            Assert.Equal(2, customerOutput.Length);
+            Assert.Equal("John", customerOutput[0].FirstName);
+            Assert.Equal("Jane", customerOutput[1].FirstName);
         }
 
         [Fact]
