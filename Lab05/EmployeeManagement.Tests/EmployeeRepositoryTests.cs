@@ -73,7 +73,7 @@ namespace EmployeeManagement.Tests
         
 
         [Fact]
-        public async Task GetCompensationAnalysisAsync_ReturnsCorrectAnalysis()
+        public async Task GetCompensationAnalysisAsync_Analysis()
         {
             // Arrange
             var context = await GetDatabaseContext();
