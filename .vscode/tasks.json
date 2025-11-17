@@ -1,0 +1,14 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "Run EmployeeManagement.Tests",
+			"type": "shell",
+			"command": "dotnet test Lab05/EmployeeManagement.Tests/EmployeeManagement.Tests.csproj",
+			"problemMatcher": [
+				"$msCompile"
+			],
+			"group": "test"
+		}
+	]
+}

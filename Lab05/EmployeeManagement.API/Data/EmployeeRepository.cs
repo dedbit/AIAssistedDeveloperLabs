@@ -46,42 +46,45 @@ namespace EmployeeManagement.API.Data
                 _context.Employees.Remove(employee);
                 await _context.SaveChangesAsync();
             }
+            #pragma warning restore CS0162
         }
 
-        /// <summary>
-        /// Gets compensation analysis showing employee distribution across salary ranges by department.
-        /// Uses complex EF Core query with grouping, filtering, joining, and salary bucketing.
-        /// Example: bucketSize = 25000, minEmployeeCount = 1
-        /// - sundhed.dk
-        /// </summary>
-        /// <param name="bucketSize">The salary range bucket size in dollars, e.g., 25000 for $25K buckets</param>
-        /// <param name="minEmployeeCount">Minimum employees required to include a result, e.g., 1, 2, 5</param>
-        /// <returns>List of compensation analysis grouped by salary range and department</returns>
+        
         public async Task<IEnumerable<CompensationAnalysisDto>> GetCompensationAnalysisAsync(decimal bucketSize = 25000m, int minEmployeeCount = 1)
         {
-            // Single LINQ query: group, bucket, aggregate, and calculate percentage in one step
-            var query = from e in _context.Employees
-                        let bucketMin = Math.Floor(e.Salary / bucketSize) * bucketSize
-                        let bucketMax = (Math.Floor(e.Salary / bucketSize) + 1) * bucketSize
-                        group e by new { bucketMin, bucketMax, e.Department } into g
-                        let departmentTotal = _context.Employees.Count(emp => emp.Department == g.Key.Department)
-                        let employeeCount = g.Count()
-                        where employeeCount >= minEmployeeCount
-                        orderby g.Key.Department, g.Key.bucketMin
-                        select new CompensationAnalysisDto
-                        {
-                            SalaryRangeMin = g.Key.bucketMin,
-                            SalaryRangeMax = g.Key.bucketMax,
-                            SalaryRangeLabel = $"${g.Key.bucketMin / 1000}K-${g.Key.bucketMax / 1000}K",
-                            Department = g.Key.Department,
-                            EmployeeCount = employeeCount,
-                            AverageSalary = g.Average(x => x.Salary),
-                            PercentageOfDepartment = departmentTotal > 0
-                                ? Math.Round((decimal)employeeCount / departmentTotal * 100, 2)
-                                : 0
-                        };
+            var employees = await _context.Employees.ToListAsync();
 
-            return await query.ToListAsync();
+            return employees
+                .GroupBy(e => e.Department)
+                .SelectMany(deptGroup =>
+                {
+                    var departmentTotal = deptGroup.Count();
+                    return deptGroup
+                        .GroupBy(e => new
+                        {
+                            BucketMin = Math.Floor(e.Salary / bucketSize) * bucketSize,
+                            BucketMax = (Math.Floor(e.Salary / bucketSize) + 1) * bucketSize,
+                            e.Department
+                        })
+                        .Where(bucketGroup => bucketGroup.Count() >= minEmployeeCount)
+                        .Select(bucketGroup => new CompensationAnalysisDto
+                        {
+                            SalaryRangeMin = bucketGroup.Key.BucketMin,
+                            SalaryRangeMax = bucketGroup.Key.BucketMax,
+                            SalaryRangeLabel = $"${bucketGroup.Key.BucketMin / 1000}K-${bucketGroup.Key.BucketMax / 1000}K",
+                            Department = bucketGroup.Key.Department,
+                            EmployeeCount = bucketGroup.Count(),
+                            AverageSalary = bucketGroup.Average(x => x.Salary),
+                            PercentageOfDepartment = departmentTotal > 0
+                                ? Math.Round((decimal)bucketGroup.Count() / departmentTotal * 100, 2)
+                                : 0
+                        });
+                })
+                .OrderBy(r => r.Department)
+                .ThenBy(r => r.SalaryRangeMin)
+                .ToList();
         }
+
+        
     }
 }
